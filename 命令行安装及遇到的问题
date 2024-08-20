@@ -1,0 +1,22 @@
+1、    virt-install --name template --ram=800 --vcpus=1 --cdrom=/var/lib/libvirt/images/images/CentOS-7-x86_64-Minimal-1810.iso --disk path=/var/lib/libvirt/images/images/template.qcow2,size=10 --network network=default --graphics vnc --check all=off
+       --name：虚拟机的名字
+       --ram：虚拟机的内存
+       --vcpus：虚拟机的cpu个数
+       --cdrom：从本地安装
+       --disk：生成的磁盘文件的路径，可以自动生成，也可以提前创建 size：磁盘的大小
+       --network：指定网络模式，default为nat模式
+2、安装完成后，查看
+   virsh list --all
+命令行安装报错参考
+   1、错误信息：无法分配内存
+      （1）增加计算节点内存 （2）修改内核参数
+       在这使用修改内核参数的方法：
+       先看下主机可以分配多少内存
+            sysctl -a | grep overcommit
+        vm.overcommit_memory = 0
+            vim /etc/sysctl.conf
+            sysctl vm.overcommit_memory=1
+        vm.overcommit_memory = 1
+            sysctl -p
+此时可以查看到后台启动了一个名为template的虚拟机 
+            virsh list
