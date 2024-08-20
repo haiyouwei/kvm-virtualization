@@ -1,0 +1,33 @@
+1、缺少python模块
+报错： “ImportError:No module named urllib3.exceptions”
+      pip3 install --upgrade pip
+      pip install urllib3 
+但使用后还是和之前报同样错误
+报错：Requirement already satisfied: pip in /usr/local/lib/python3.6/site-packages (21.2.4)
+  因为用上述指令系统自动将包下载到python3.6当中，而上述报错是因为/usr/lib/python2.7/中没有该包，因此我们下载时需要使用以下命令：
+      pip install --target=/usr/lib/python2.7/site-packages --upgrade pip
+      pip install --target=/usr/lib/python2.7/site-packages urllib3
+2、Centos 下安装 python2-urllib3 失败
+  可能是因为本地已经有的urllib3会和python2-urllib3 的rpm包起冲突，所以先把urllib3卸载了再安装rpm包：
+      pip uninstall urllib3
+  卸载完最好进目录验证下，如没有urllib3则代表卸载成功，否则最好手动清除
+      cd /usr/lib/python2.7/site-packages/urllib3
+  然后重新安装成功
+      yum install python-urllib3.noarch 0:1.10.2-7.el7 -y
+3、不能打开显示：cannot open display: :0.0
+                unable to open display
+   可以输入命令 export display=:0 执行一下
+   先使用logout退出后重新登录一下后执行命令
+4、不能运行virt-viewer
+   WARNING 需要图形显示，但未设置 DISPLAY。不能运行 virt-viewer。
+   WARNING 没有控制台用于启动客户机，默认为 --wait -1开始安装......ERROR unsupported formatcharacter '▒' (0xffffffe7) at index 47域安装失败，您可以运行下列命令重启您的域：'virsh start virsh --connect qemu:///system start template'否则请重新开始安装。
+   安装x11图形界面工具
+       yum install -y xorg-x11-font-utils xorg-x11-server-utils xorg-x11-utils xorg-x11-xauth xorg-x11-xinit
+    ssh 开启下X11转发
+       vim /etc/ssh/sshd_config
+           X11Forwarding yes
+    避免乱码
+       export LANG=zh_CN.UTF-8
+    安装中文字符，解决界面乱码问题
+       yum install -y dejavu-lgc-sans-fonts
+       yum groupinstall -y "Fonts"
