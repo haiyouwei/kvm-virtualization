@@ -1,0 +1,35 @@
+1、查看系统版本
+   cat /etc/centos-release
+2. 验证CPU是否支持虚拟化，输入有vmx或svm就支持，支持虚拟化则就支持KVM
+   cat /proc/cpuinfo | egrep 'vmx|svm'.
+若没有，则需要在物理机开启虚拟化支持
+   勾选虚拟化 Inter VT-x/EPT 或 AMD-V/RVI
+       虚拟化CPU性能计数器
+3. 查看是否加载KVM
+   egrep 'svm|vmx' /proc/cpuinfo
+   lscpu | grep VT-x
+   lsmod | grep kvm
+  若没有加载 执行 modprobe kvm
+4. 关闭selinux
+   setenforce 0
+   sed -i 's/Enforcing/disabled/' /etc/selinux/config
+5. 安装KVM相关软件包
+   yum install qemu-kvm qemu-img virt-manager libvirt libvirt-python libvirt-client virt-install virt-viewer -y
+      其中：
+          qemu-kvm: KVM模块
+          libvirt: 虚拟管理模块
+          virt-manager: 图形界面管理虚拟机
+          virt-install: 虚拟机命令行安装工具
+6. 启动libvirt并设置开机自启动
+   systemctl start libvirtd
+   systemctl enable libvirtd
+*** 使用图形化界面安装kvm虚拟机
+1、新建两个目录
+   mkdir /home/iso
+   mkdir /home/images
+2、上传镜像文件
+   方法一：dd if=/dev/cdrom of=/home/iso/centos7u4_x86_64.iso
+   方法二：可以将window下的镜像文件传送到虚拟机上，方便安装（用mobaxterm或者xftp传)
+3、进入图形化
+   virt-manager
+#####
